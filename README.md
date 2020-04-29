@@ -1,4 +1,4 @@
-# covid-19-kr-slack-notifier\
+# covid-19-kr-slack-notifier
 
 ##### 코로나바이러스감염증-19 데이터를 가져와 슬랙 Web Hook으로 보내줍니다.
 ##### `hook_url.conf` 파일을 만들고, 그 안에 Web Hook URL만 넣어주면됩니다.
