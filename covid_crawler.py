@@ -23,21 +23,12 @@ class COVIDCrawler:
         rows = container.find_all('tr')
         region_rows = list(filter(lambda row: row.find('th', {'scope': 'row'}) is not None, rows))
 
-        self.counts: [DailyCount] = []
-
-        for region_row in region_rows:
-            region_name = region_row.contents[0].text
-            region_overall = region_row.contents[1].text
-            region_overseas = region_row.contents[2].text
-            region_korea = region_row.contents[3].text
-
-            print(f'{region_name}|{region_overall}|{region_overseas}|{region_korea}')
-            self.counts.append(DailyCount(
-                region=region_name,
-                overall=int(region_overall),
-                korea=int(region_korea),
-                overseas=int(region_overseas)
-            ))
+        self.counts: [DailyCount] = list(map(lambda region: DailyCount(
+            region=region.contents[0].text,
+            overall=int(region.contents[1].text),
+            korea=int(region.contents[2].text),
+            overseas=int(region.contents[3].text)
+        ), region_rows))
 
 
 if __name__ == '__main__':
