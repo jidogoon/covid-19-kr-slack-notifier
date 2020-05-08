@@ -9,6 +9,9 @@ class DailyCount:
         self.korea: int = korea
         self.overseas: int = overseas
 
+    def to_message(self):
+        return f'{self.region}: {self.overall} (국내 {self.korea}, 해외유입 {self.overseas})'
+
 
 class COVIDCrawler:
     SOURCE_URL: str = 'http://ncov.mohw.go.kr/bdBoardList_Real.do?brdId=1&brdGubun=13'
