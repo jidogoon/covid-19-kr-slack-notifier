@@ -5,7 +5,7 @@ from slack_helper import SlackHelper
 LAST_WHEN_FILENAME = 'last_when'
 
 if __name__ == '__main__':
-    hook_url = FileReader('hook_url.conf', default_value=None).read()
+    hook_urls = FileReader('hook_url.conf', default_value=None).read_lines()
     last_when = FileReader(LAST_WHEN_FILENAME, default_value=None).read()
 
     crawler = COVIDCrawler()
@@ -22,5 +22,6 @@ if __name__ == '__main__':
         exit(0)
 
     FileWriter(LAST_WHEN_FILENAME, when).write()
-    slack = SlackHelper(hook_url=hook_url)
-    slack.report_to_slack(message)
+    for hook_url in hook_urls:
+        slack = SlackHelper(hook_url=hook_url)
+        slack.report_to_slack(message)

@@ -15,6 +15,9 @@ class FileReader:
             f.close()
             return result
 
+    def read_lines(self) -> [str]:
+        return self.read().split('\n')
+
 
 class FileWriter:
     def __init__(self, file_path: str, data: str):
