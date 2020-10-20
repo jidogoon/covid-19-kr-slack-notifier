@@ -29,8 +29,8 @@ class COVIDCrawler:
         self.counts: [DailyCount] = list(map(lambda region: DailyCount(
             region=region.contents[0].text,
             overall=int(region.contents[1].text),
-            korea=int(region.contents[3].text),
-            overseas=int(region.contents[2].text)
+            korea=int(region.contents[2].text),
+            overseas=int(region.contents[3].text)
         ), region_rows))
 
 

@@ -18,6 +18,8 @@ if __name__ == '__main__':
     message = f'오늘의 대한민국 COVID-19 [{when}]\n\n' \
               f'{messages}'
 
+    # print(message)
+
     if last_when == when:
         exit(0)
 
