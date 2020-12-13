@@ -10,7 +10,7 @@ class DailyCount:
         self.overseas: int = overseas
 
     def to_message(self):
-        return f'{self.region}: {self.overall} (국내 {self.korea}, 해외유입 {self.overseas})'
+        return f'{self.region}: {self.overall:,} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
 
 
 class COVIDCrawler:
@@ -28,9 +28,9 @@ class COVIDCrawler:
 
         self.counts: [DailyCount] = list(map(lambda region: DailyCount(
             region=region.contents[0].text,
-            overall=int(region.contents[1].text),
-            korea=int(region.contents[2].text),
-            overseas=int(region.contents[3].text)
+            overall=int(region.contents[1].text.replace(',', '')),
+            korea=int(region.contents[2].text.replace(',', '')),
+            overseas=int(region.contents[3].text.replace(',', ''))
         ), region_rows))
 
 
