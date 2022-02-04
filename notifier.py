@@ -10,15 +10,6 @@ if __name__ == '__main__':
 
     crawler = COVIDCrawler()
     when = crawler.when
-    all_counts = crawler.counts
-    counts_available = list(filter(lambda count: count.overall > 0, all_counts))
-    counts_messages = list(map(lambda count: count.to_message(), counts_available))
-    messages = '\n'.join(counts_messages)
-
-    message = f'오늘의 대한민국 COVID-19 [{when}]\n\n' \
-              f'{messages}'
-
-    # print(message)
 
     if last_when == when:
         exit(0)
@@ -26,4 +17,4 @@ if __name__ == '__main__':
     FileWriter(LAST_WHEN_FILENAME, when).write()
     for hook_url in hook_urls:
         slack = SlackHelper(hook_url=hook_url)
-        slack.report_to_slack(message)
+        slack.report_to_slack(crawler.message)
