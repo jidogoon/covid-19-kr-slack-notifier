@@ -12,11 +12,14 @@ class DailyCount:
     overall: int
     korea: int
     overseas: int
+    rates_per_100k: float
 
     def to_message(self):
-        region = f'*{self.region}*' if self.region == '합계' else self.region
-        overall = f'*{self.overall:,}*' if self.region == '합계' else f'{self.overall:,}'
-        return f'{region}: {overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
+        if self.region == '합계':
+            return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 10만명당 발생률 {self.rates_per_100k:.4f}%)'
+        if self.region == '검역':
+            return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
+        return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 발생률 {self.rates_per_100k:.4f}%)'
 
 
 @dataclass
@@ -60,16 +63,17 @@ class COVIDCrawler:
         region_rows = list(filter(lambda row: row.find('th', {'scope': 'row'}) is not None, rows))
         self.counts: [DailyCount] = list(map(lambda region: DailyCount(
             region=region.contents[0].text,
-            overall=int(region.contents[1].text.replace(',', '')),
-            korea=int(region.contents[2].text.replace(',', '')),
-            overseas=int(region.contents[3].text.replace(',', ''))
+            overall=self._to_number(region.contents[1].text),
+            korea=self._to_number(region.contents[2].text),
+            overseas=self._to_number(region.contents[3].text),
+            rates_per_100k=self._to_number(region.contents[7].text) / 100000,
         ), region_rows))
 
     def _find_severes(self, soup):
         total_map = soup.select('ul.cityinfo.total li')
         map_items = list(map(lambda item: MapItem(
             title=str(item.contents[0].text).strip(),
-            count=int(re.sub("[^0-9]", "", item.contents[1].text))
+            count=self._to_number(item.contents[1].text)
         ), total_map))
         self.severe: Optional[int] = None
         self.admitted: Optional[int] = None
@@ -79,6 +83,13 @@ class COVIDCrawler:
                 self.severe = item.count
             if item.title == '신규입원':
                 self.admitted = item.count
+
+    def _to_number(self, text: str) -> int:
+        if text.strip() == '':
+            return 0
+        if not bool(re.search(r'\d', text)):
+            return 0
+        return int(re.sub(r'[^0-9]', '', text))
 
 
 if __name__ == '__main__':
