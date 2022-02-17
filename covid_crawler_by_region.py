@@ -1,9 +1,13 @@
 import re
+from abc import ABC
 from dataclasses import dataclass
 from typing import Optional
 
 import requests
 from bs4 import BeautifulSoup
+
+from common import Common
+from covid_crawler_base import COVIDCrawlerBase
 
 
 @dataclass
@@ -31,7 +35,7 @@ class MapItem:
         return f'{self.title}: {self.count:,}'
 
 
-class COVIDCrawler:
+class COVIDCrawlerByRegion(COVIDCrawlerBase, ABC):
     SOURCE_URL: str = 'http://ncov.mohw.go.kr/bdBoardList_Real.do?brdId=1&brdGubun=13'
 
     @property
@@ -63,17 +67,17 @@ class COVIDCrawler:
         region_rows = list(filter(lambda row: row.find('th', {'scope': 'row'}) is not None, rows))
         self.counts: [DailyCount] = list(map(lambda region: DailyCount(
             region=region.contents[0].text,
-            overall=self._to_number(region.contents[1].text),
-            korea=self._to_number(region.contents[2].text),
-            overseas=self._to_number(region.contents[3].text),
-            rates_per_100k=self._to_number(region.contents[7].text) / 100000,
+            overall=Common.to_number(region.contents[1].text),
+            korea=Common.to_number(region.contents[2].text),
+            overseas=Common.to_number(region.contents[3].text),
+            rates_per_100k=Common.to_number(region.contents[7].text) / 100000,
         ), region_rows))
 
     def _find_severes(self, soup):
         total_map = soup.select('ul.cityinfo.total li')
         map_items = list(map(lambda item: MapItem(
             title=str(item.contents[0].text).strip(),
-            count=self._to_number(item.contents[1].text)
+            count=Common.to_number(item.contents[1].text)
         ), total_map))
         self.severe: Optional[int] = None
         self.admitted: Optional[int] = None
@@ -84,13 +88,6 @@ class COVIDCrawler:
             if item.title == '신규입원':
                 self.admitted = item.count
 
-    def _to_number(self, text: str) -> int:
-        if text.strip() == '':
-            return 0
-        if not bool(re.search(r'\d', text)):
-            return 0
-        return int(re.sub(r'[^0-9]', '', text))
-
 
 if __name__ == '__main__':
-    print(COVIDCrawler().message)
+    print(COVIDCrawlerByRegion().message)
