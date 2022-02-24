@@ -7,7 +7,7 @@ from slack_helper import SlackHelper
 LAST_WHEN_FILENAME_REGION = 'last_when_region'
 LAST_WHEN_FILENAME_BED = 'last_when_bed'
 
-hook_urls = FileReader('hook_url.conf', default_value=None).read_lines() or []
+hook_urls = FileReader('hook_url.conf', default_value=None).read_lines()
 
 
 def notify(crawler: COVIDCrawlerBase, last_when_filename: str):

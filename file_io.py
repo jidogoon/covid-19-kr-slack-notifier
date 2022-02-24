@@ -16,7 +16,7 @@ class FileReader:
             return result
 
     def read_lines(self) -> [str]:
-        return self.read() or ''.split('\n')
+        return (self.read() or '').split('\n')
 
 
 class FileWriter:
