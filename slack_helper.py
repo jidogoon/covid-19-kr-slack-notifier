@@ -7,7 +7,8 @@ class SlackHelper:
         self.hook_url = hook_url
 
     def report_to_slack(self, content: str):
-        if self.hook_url is None:
+        print(f'send using hook url = {self.hook_url}\nmsg = {content}')
+        if self.hook_url is None or self.hook_url.strip() == '':
             raise Exception('check conf!')
 
         payload = {"text": content}

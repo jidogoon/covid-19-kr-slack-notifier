@@ -70,7 +70,7 @@ class COVIDCrawlerByRegion(COVIDCrawlerBase, ABC):
             overall=Common.to_number(region.contents[1].text),
             korea=Common.to_number(region.contents[2].text),
             overseas=Common.to_number(region.contents[3].text),
-            rates_per_100k=Common.to_number(region.contents[7].text) / 100000,
+            rates_per_100k=Common.to_number(region.contents[6].text) / 100000,
         ), region_rows))
 
     def _find_severes(self, soup):
