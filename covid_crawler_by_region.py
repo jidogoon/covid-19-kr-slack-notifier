@@ -16,14 +16,11 @@ class DailyCount:
     overall: int
     korea: int
     overseas: int
-    rates_per_100k: float
 
     def to_message(self):
         if self.region == '합계':
-            return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 10만명당 발생률 {self.rates_per_100k:.4f}%)'
-        if self.region == '검역':
-            return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
-        return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 발생률 {self.rates_per_100k:.4f}%)'
+            return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
+        return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
 
 
 @dataclass
@@ -69,8 +66,7 @@ class COVIDCrawlerByRegion(COVIDCrawlerBase, ABC):
             region=region.contents[0].text,
             overall=Common.to_number(region.contents[1].text),
             korea=Common.to_number(region.contents[2].text),
-            overseas=Common.to_number(region.contents[3].text),
-            rates_per_100k=Common.to_number(region.contents[6].text) / 100000,
+            overseas=Common.to_number(region.contents[3].text)
         ), region_rows))
 
     def _find_severes(self, soup):
