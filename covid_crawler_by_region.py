@@ -20,10 +20,12 @@ class DailyCount:
 
     def to_message(self):
         if self.region == '합계':
-            return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 10만명당 발생률 {self.rates_per_100k:.4f}%)'
+            # return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 10만명당 발생률 {self.rates_per_100k:.4f}%)'
+            return f'*{self.region}*: *{self.overall:,}* (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
         if self.region == '검역':
             return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
-        return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 발생률 {self.rates_per_100k:.4f}%)'
+        # return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,}, 발생률 {self.rates_per_100k:.4f}%)'
+        return f'{self.region}: {self.overall} (국내 {self.korea:,}, 해외유입 {self.overseas:,})'
 
 
 @dataclass
@@ -44,10 +46,10 @@ class COVIDCrawlerByRegion(COVIDCrawlerBase, ABC):
         region_counts = list(map(lambda count: count.to_message(), counts_available))
         severe = f'오늘의 대한민국 COVID-19 [*{self.when}*]\n\n'
 
-        if self.severe is not None:
-            severe += f'*재원 위중증: {self.severe:,}*\n'
-        if self.admitted is not None:
-            severe += f'*신규입원: {self.admitted:,}*'
+        # if self.severe is not None:
+        #     severe += f'*재원 위중증: {self.severe:,}*\n'
+        # if self.admitted is not None:
+        #     severe += f'*신규입원: {self.admitted:,}*'
 
         message = '\n'.join(region_counts)
         return f'{severe}\n\n{message}'

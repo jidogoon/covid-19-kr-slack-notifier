@@ -23,4 +23,4 @@ def notify(crawler: COVIDCrawlerBase, last_when_filename: str):
 
 if __name__ == '__main__':
     notify(COVIDCrawlerByRegion(), LAST_WHEN_FILENAME_REGION)
-    notify(COVIDCrawlerByBed(), LAST_WHEN_FILENAME_BED)
+    # notify(COVIDCrawlerByBed(), LAST_WHEN_FILENAME_BED)
