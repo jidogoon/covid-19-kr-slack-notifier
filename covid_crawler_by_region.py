@@ -41,10 +41,10 @@ class COVIDCrawlerByRegion(COVIDCrawlerBase, ABC):
         region_counts = list(map(lambda count: count.to_message(), counts_available))
         severe = f'오늘의 대한민국 COVID-19 [*{self.when}*]\n\n'
 
-        # if self.severe is not None:
-        #     severe += f'*재원 위중증: {self.severe:,}*\n'
-        # if self.admitted is not None:
-        #     severe += f'*신규입원: {self.admitted:,}*'
+        if self.severe is not None:
+            severe += f'*재원 위중증: {self.severe:,}*\n'
+        if self.admitted is not None:
+            severe += f'*신규입원: {self.admitted:,}*'
 
         message = '\n'.join(region_counts)
         return f'{severe}\n\n{message}'
